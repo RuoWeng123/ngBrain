@@ -1,0 +1,19 @@
+@import "./base.css";
+
+#app {
+  max-width: 100%;
+  margin: 0 auto;
+  font-weight: normal;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+}
+
