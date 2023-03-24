@@ -126,24 +126,4 @@ const checkCancel = (options: any) => {
   return cancelled;
 };
 
-const unrollColors = (color: number[], num_verts: number) => {
-  const [data_color_0, data_color_1, data_color_2, data_color_3] = [color[0], color[1], color[2], color[3]];
-  const unrolled_colors = new Float32Array(num_verts * 4);
-  for (let i = 0; i < unrolled_colors.length; i += 4) {
-    unrolled_colors[i] = data_color_0;
-    unrolled_colors[i + 1] = data_color_1;
-    unrolled_colors[i + 2] = data_color_2;
-    unrolled_colors[i + 3] = data_color_3;
-  }
-
-  return unrolled_colors;
-};
-
-const createModel = (model_data: any, model: any, options: any) => {
-
-}
-
-const findCentroid = (shape:) =>{
-
-}
-export { getScrollParent, getOffset, captureMouse, isFunction, checkCancel, unrollColors };
+export { getScrollParent, getOffset, captureMouse, isFunction, checkCancel };

@@ -79,6 +79,7 @@ type SurfaceOptionsType = {
   format: FormatOptionType;
   model_name: ModelNameType;
   resultType: 'arraybuffer';
+  cachedUrl?: string;
 
   content_type: 'text';
   opacity: number;

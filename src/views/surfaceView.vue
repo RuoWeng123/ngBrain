@@ -6,19 +6,25 @@
 </template>
 
 <script>
-import {Surface} from '../../package/surface/surface';
-import { pialLoadModelData, scalpLoadModelData } from "../../package/utils/file";
+import {ngControl} from '../../package/surface/ngControl';
+import { pialLoadModelData } from "../../package/utils/file";
 import { onMounted, reactive, onBeforeUnmount } from "vue";
+import { loadModelFromUrl } from "ngBrain/surface/loading";
 
 export default {
   name: "surfaceView",
   setup() {
     let surface = reactive({});
     onMounted(async () => {
-      surface = new Surface("ngSurface");
+      surface = new ngControl("ngSurface");
       surface.init();
-      await surface.loadPialModelDataFromNative(pialLoadModelData.url, pialLoadModelData.options);
-      // await surface.loadScalpModelDataFromNative(scalpLoadModelData.url, scalpLoadModelData.options);
+      surface.initGui();
+      loadModelFromUrl(pialLoadModelData.url, pialLoadModelData.options, (model_data, filename, options) =>{
+        surface.renderModelData(model_data, filename, options);
+      });
+      // loadModelFromUrl(scalpLoadModelData.url, scalpLoadModelData.options, (model_data, filename, options) =>{
+      //   surface.renderModelData(model_data, filename, options);
+      // });
     });
     onBeforeUnmount(() => {
       surface.destroyGui();
