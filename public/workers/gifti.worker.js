@@ -1,13 +1,13 @@
 const ctx = self;
+// eslint-disable-next-line no-undef
+const gifti = importScripts('./gifti-reader.js');
 ctx.onmessage = (res) =>{
   let input = res.data;
-  
   /* Need to prepend the base url, which is transfered with the
    * message. This gets around issues with loading a script from
    * within a worker blob.
    */
   // eslint-disable-next-line no-undef
-  importScripts(input.url + 'gifti-reader.js');
   
   let errorObj = {
     error: true,
@@ -34,7 +34,7 @@ ctx.onmessage = (res) =>{
 
 function parse(data) {
   var result = {};
-  var gii = gifti.parse(data);
+  var gii = this.gifti.parse(data);
   var n_vtx = gii.getNumPoints();
   var n_tri = gii.getNumTriangles();
   
@@ -80,7 +80,6 @@ function parse(data) {
   }
   return result;
 }
-export default ctx;
 
 
 
