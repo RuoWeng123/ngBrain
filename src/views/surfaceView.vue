@@ -7,7 +7,7 @@
 
 <script>
 import {ngControl} from '../../package/surface/ngControl';
-import { pialLoadModelData } from "../../package/utils/file";
+import { pialLoadModelData, scalpLoadModelData } from "../../package/utils/file";
 import { onMounted, reactive, onBeforeUnmount } from "vue";
 import { loadModelFromUrl } from "ngBrain/surface/loading";
 
@@ -22,9 +22,9 @@ export default {
       loadModelFromUrl(pialLoadModelData.url, pialLoadModelData.options, (model_data, filename, options) =>{
         surface.renderModelData(model_data, filename, options);
       });
-      // loadModelFromUrl(scalpLoadModelData.url, scalpLoadModelData.options, (model_data, filename, options) =>{
-      //   surface.renderModelData(model_data, filename, options);
-      // });
+      loadModelFromUrl(scalpLoadModelData.url, scalpLoadModelData.options, (model_data, filename, options) =>{
+        surface.renderModelData(model_data, filename, options);
+      });
     });
     onBeforeUnmount(() => {
       surface.destroyGui();

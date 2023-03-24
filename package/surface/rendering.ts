@@ -96,8 +96,10 @@ const createShape = (object_description: any, options: SurfaceOptionsType) => {
     material = new THREE.LineBasicMaterial({ vertexColors: THREE.VertexColors });
     shape = new THREE.Line(geometry, material, THREE.LineSegments);
   } else {
-    material = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
+    material = new THREE.MeshLambertMaterial({
+      color: 0x3e3a3a,
+      emissive: 0xb6bdc1,
+      emissiveIntensity: 0.7,
       transparent: true,
     });
     material.opacity = options.opacity / 100 || 1;

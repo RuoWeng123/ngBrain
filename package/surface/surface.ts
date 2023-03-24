@@ -101,9 +101,35 @@ export class Surface {
   };
 
   public initLight = () => {
-    this.light = new THREE.PointLight(0xFFFFFF, 1);
+    this.light = new THREE.PointLight(0Xf5f6f5, 0.7);
     this.light.position.set(0, 0, default_camera_distance);
+    this.light.lookAt(0, 0, 0);
     this.scene.add(this.light);
+
+    const lightY = new THREE.PointLight(0Xf5f6f5, 0.7);
+    lightY.position.set(0, default_camera_distance, 0);
+    lightY.lookAt(0, 0, 0);
+    this.scene.add(lightY);
+
+    const lightX = new THREE.PointLight(0Xf5f6f5, 0.7);
+    lightX.position.set(default_camera_distance, 0, 0);
+    lightX.lookAt(0, 0, 0);
+    this.scene.add(lightX);
+
+    const lightY2 = new THREE.PointLight(0Xf5f6f5, 0.7);
+    lightY2.position.set(0, -default_camera_distance, 0);
+    lightY2.lookAt(0, 0, 0);
+    this.scene.add(lightY2);
+
+    const lightX2 = new THREE.PointLight(0Xf5f6f5, 0.7);
+    lightX2.position.set(-default_camera_distance, 0, 0);
+    lightX2.lookAt(0, 0, 0);
+    this.scene.add(lightX2);
+
+    const lightZ2 = new THREE.PointLight(0Xf5f6f5, 0.7);
+    lightZ2.position.set(0, 0, -default_camera_distance);
+    lightZ2.lookAt(0, 0, 0);
+    this.scene.add(lightZ2);
   };
 
   private initControl = () => {
@@ -144,7 +170,7 @@ export class Surface {
       this.viewer.requestAnimationFrame = window.requestAnimationFrame(this.renderFrame);
 
       // 光源头追踪
-      this.light.target = this.scene.children.find((item: any) => item.name === 'pial_gii_1');
+      // this.light.target = this.scene.children.find((item: any) => item.name === 'pial_gii_1');
 
       last_frame = current_frame || timestamp;
       current_frame = timestamp;

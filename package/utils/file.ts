@@ -20,7 +20,7 @@ const scalpLoadModelData = {
     format: "mniobj",
     model_name: "scalp_mask",
     content_type: "text",
-    opacity: 20
+    opacity: 80
   },
 }
 const parcUrl = "originalData/parc_aparc.txt.gz";
