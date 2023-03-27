@@ -9,7 +9,7 @@ export const default_camera_distance = 500;
 let current_frame: any; // 用户动画渲染时，记录当前帧
 let last_frame: any; // 用户动画渲染时，记录上一帧
 let old_zoom_level = 1;
-export class Surface {
+export class SurfaceBase {
   public renderer: any;
   public scene: any;
   public camera: any;
@@ -74,11 +74,16 @@ export class Surface {
   public init = () => {
     this.initRenderer();
     this.initScene();
+    this.initAxes();
     this.initCamera();
     this.initLight();
     this.initControl();
   };
 
+  private initAxes = () => {
+    const axesHelper = new THREE.AxesHelper( 200 );
+    this.scene.add( axesHelper );
+  }
   public initRenderer = () => {
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -101,35 +106,22 @@ export class Surface {
   };
 
   public initLight = () => {
-    this.light = new THREE.PointLight(0Xf5f6f5, 0.7);
-    this.light.position.set(0, 0, default_camera_distance);
+    const ambientLight = new THREE.AmbientLight(0x000000);
+    ambientLight.name = 'ambientLight';
+    this.scene.add(ambientLight);
+    // x 红， y 绿色  z 蓝色
+    this.light = new THREE.PointLight(0Xf5f6f5, 0.7, 0);
+    this.light.position.set(-default_camera_distance, 0, 0);
     this.light.lookAt(0, 0, 0);
     this.scene.add(this.light);
 
-    const lightY = new THREE.PointLight(0Xf5f6f5, 0.7);
-    lightY.position.set(0, default_camera_distance, 0);
-    lightY.lookAt(0, 0, 0);
-    this.scene.add(lightY);
+    const light1 = new THREE.PointLight(0Xf5f6f5, 0.7, 0);
+    light1.position.set(default_camera_distance, 0, 0);
+    this.scene.add(light1);
 
-    const lightX = new THREE.PointLight(0Xf5f6f5, 0.7);
-    lightX.position.set(default_camera_distance, 0, 0);
-    lightX.lookAt(0, 0, 0);
-    this.scene.add(lightX);
-
-    const lightY2 = new THREE.PointLight(0Xf5f6f5, 0.7);
-    lightY2.position.set(0, -default_camera_distance, 0);
-    lightY2.lookAt(0, 0, 0);
-    this.scene.add(lightY2);
-
-    const lightX2 = new THREE.PointLight(0Xf5f6f5, 0.7);
-    lightX2.position.set(-default_camera_distance, 0, 0);
-    lightX2.lookAt(0, 0, 0);
-    this.scene.add(lightX2);
-
-    const lightZ2 = new THREE.PointLight(0Xf5f6f5, 0.7);
-    lightZ2.position.set(0, 0, -default_camera_distance);
-    lightZ2.lookAt(0, 0, 0);
-    this.scene.add(lightZ2);
+    const light2 = new THREE.PointLight(0Xf5f6f5, 0.7, 0);
+    light2.position.set(0, 0, -default_camera_distance);
+    this.scene.add(light2);
   };
 
   private initControl = () => {

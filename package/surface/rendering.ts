@@ -96,15 +96,18 @@ const createShape = (object_description: any, options: SurfaceOptionsType) => {
     material = new THREE.LineBasicMaterial({ vertexColors: THREE.VertexColors });
     shape = new THREE.Line(geometry, material, THREE.LineSegments);
   } else {
-    material = new THREE.MeshLambertMaterial({
-      color: 0x3e3a3a,
-      emissive: 0xb6bdc1,
-      emissiveIntensity: 0.7,
-      transparent: true,
+    material = new THREE.MeshStandardMaterial({
+      color: options.material.color || 0XBAB9BE,
+      rounghness: options.material.rounghness || 1,
+      metalness: options.material.metainess || 0,
+      emissive: options.material.emissive || 0x000000,
+      emissiveIntensity: options.material.emissiveIntensity || 0.6,
+      transparent: options.material.opacity < 1,
     });
-    material.opacity = options.opacity / 100 || 1;
+    material.opacity = options.material.opacity || 0.9;
 
     shape = new THREE.Mesh(geometry, material);
+    shape.name = options.material.name ? options.material.name : options.model_name;
     shape.userData.has_wireframe = true;
   }
 

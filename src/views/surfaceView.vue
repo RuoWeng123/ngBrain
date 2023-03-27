@@ -18,13 +18,18 @@ export default {
     onMounted(async () => {
       surface = new ngControl("ngSurface");
       surface.init();
-      surface.initGui();
       loadModelFromUrl(pialLoadModelData.url, pialLoadModelData.options, (model_data, filename, options) =>{
         surface.renderModelData(model_data, filename, options);
       });
-      loadModelFromUrl(scalpLoadModelData.url, scalpLoadModelData.options, (model_data, filename, options) =>{
-        surface.renderModelData(model_data, filename, options);
-      });
+      // loadModelFromUrl(scalpLoadModelData.url, scalpLoadModelData.options, (model_data, filename, options) =>{
+      //   surface.renderModelData(model_data, filename, options);
+      // });
+      setTimeout(() => {
+        surface.initGui();
+        if (pialLoadModelData.options.isDebug) {
+          surface.debugMaterialGui(pialLoadModelData.options.material.name);
+        }
+      }, 1000);
     });
     onBeforeUnmount(() => {
       surface.destroyGui();
