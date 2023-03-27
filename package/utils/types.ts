@@ -93,7 +93,7 @@ type SurfaceOptionsType = {
     opacity: number;
     emissive?: number;
     emissiveIntensity?: number;
-    rounghness?: number;  //控制镜面，0是镜面，1是漫反射
+    roughness?: number;  //控制镜面，0是镜面，1是漫反射
     metainess?: number;  //材料的金属程度，0表示非金属，1表示完全金属
   },
 }

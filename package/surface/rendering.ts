@@ -46,7 +46,7 @@ const createModel = (model_data: PialModelDataType | ScalpModelDataType, filenam
         // @ts-ignore
         index: new THREE.BufferAttribute(new Uint32Array(Array.isArray(shape_data.indices) ? shape_data.indices : Object.values(shape_data.indices)), 1),
         is_line,
-        centroid: shape_data.centroid
+        centroid: shape_data.centroid,
       };
 
       const shape = createShape(object_description, options);
@@ -98,11 +98,11 @@ const createShape = (object_description: any, options: SurfaceOptionsType) => {
   } else {
     material = new THREE.MeshStandardMaterial({
       color: options.material.color || 0XBAB9BE,
-      rounghness: options.material.rounghness || 1,
       metalness: options.material.metainess || 0,
       emissive: options.material.emissive || 0x000000,
       emissiveIntensity: options.material.emissiveIntensity || 0.6,
       transparent: options.material.opacity < 1,
+      roughness: options.material.roughness || 1,
     });
     material.opacity = options.material.opacity || 0.9;
 

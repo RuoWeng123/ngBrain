@@ -57,9 +57,8 @@ export class ngControl extends SurfaceBase {
     const data= {
       color: object3D.material.color.getHex(),
       emissive: object3D.material.emissive.getHex(),
-      rounghmess: object3D.material.roughness,
       emissiveIntensity: object3D.material.emissiveIntensity,
-      rounghness: object3D.material.roughness,
+      roughness: object3D.material.roughness,
       metainess: object3D.material.metalness,
     }
     const materialFolder = this.gui.addFolder('object3DMaterial');
@@ -91,8 +90,8 @@ export class ngControl extends SurfaceBase {
       this.viewer.updated = true;
       this.renderFrame();
     });
-    materialFolder.add(data, 'rounghness', 0, 1).onChange((value: number) => {
-      object3D.material.rounghness = value;
+    materialFolder.add(data, 'roughness', 0, 1).onChange((value: number) => {
+      object3D.material.roughness = value;
       this.viewer.updated = true;
       this.renderFrame();
     });

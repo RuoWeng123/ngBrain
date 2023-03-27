@@ -10,8 +10,7 @@ const getScrollParent = (element: HTMLElement | null) => {
 const getOffset = (element: HTMLElement, view = "surface-viewer") => {
   let [ top, left, scrollTop ] = [ 0, 0, 0 ];
   let scrollParent = getScrollParent(element);
-  // @ts-ignore
-  while (scrollParent && !scrollParent.isSameNode($("html")[0])) {
+  while (scrollParent && !scrollParent.isSameNode(document.body)) {
     scrollTop += scrollParent.scrollTop;
     scrollParent = getScrollParent(scrollParent.parentElement);
   }
@@ -100,6 +99,8 @@ const captureMouse = (element: HTMLElement, view = "surface-viewer") => {
     },
     false
   );
+
+  return mouse;
 };
 
 /**

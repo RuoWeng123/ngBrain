@@ -13,7 +13,7 @@ const pialLoadModelData = {
       color: 0XB7B7B7,
       emissive: 0xc9c9c9,
       emissiveIntensity: 0.6,
-      roughness: 1,
+      roughness: 0.9,
       transparent: true,
       opacity: 1,
     }
