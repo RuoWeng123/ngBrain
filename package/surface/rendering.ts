@@ -38,6 +38,7 @@ const createModel = (model_data: PialModelDataType | ScalpModelDataType, filenam
       if (shape_data.indices.length === 0) {
         continue;
       }
+      console.log('打印顶角', position_buffer);
 
       object_description = {
         position: position_buffer,

@@ -41,10 +41,16 @@ const scalpLoadModelData = {
   },
 }
 const parcUrl = "originalData/parc_aparc.txt.gz";
+
+
+const volumeT1Url = 'originalData/T1.mgz';
+const scalpMaskUrl = 'originalData/scalp_mask.nii.gz';
 export {
   pialUrl,
   pialLoadModelData,
   scalpUrl,
   scalpLoadModelData,
   parcUrl,
+  volumeT1Url,
+  scalpMaskUrl,
 }

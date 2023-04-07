@@ -11,6 +11,11 @@ type CoordinateType = {
   y: number;
   z: number;
 }
+type VoxelCoordinateType = {
+  i: number;
+  j: number;
+  k: number;
+}
 type ShapeType = {
   name?: string;
   bounding_box: BoundingBoxType;
@@ -100,6 +105,7 @@ type SurfaceOptionsType = {
 export type {
   BoundingBoxType,
   CoordinateType,
+  VoxelCoordinateType,
   ShapeType,
   PialModelDataType,
   ScalpModelDataType,
