@@ -1,4 +1,4 @@
-import { isFunction } from "./isFunction";
+import { isFunction } from './isFunction'
 
 export const events = {
   /**
@@ -27,10 +27,10 @@ export const events = {
    * ```
    *
    */
-  addEventModel: function(object) {
-    let event_listeners = [];
-    let propagated_events = {};
-    
+  addEventModel: function (object) {
+    let event_listeners = []
+    let propagated_events = {}
+
     /**
      * @doc function
      * @name BrainBrowser.Event Model:addEventListener
@@ -55,14 +55,14 @@ export const events = {
      * event that is trigger on the object. The actual name of the triggered event
      * will be passed in **event.name**.
      */
-    object.addEventListener = function(event_name, callback) {
+    object.addEventListener = function (event_name, callback) {
       if (!event_listeners[event_name]) {
-        event_listeners[event_name] = [];
+        event_listeners[event_name] = []
       }
-      
-      event_listeners[event_name].push(callback);
-    };
-    
+
+      event_listeners[event_name].push(callback)
+    }
+
     /**
      * @doc function
      * @name BrainBrowser.Event Model:triggerEvent
@@ -76,26 +76,26 @@ export const events = {
      * trigger_object.triggerEvent("my-event", { event_property: "Some info."});
      * ```
      */
-    object.triggerEvent = function(event_name, event) {
-      let target = this;
-      
-      event = event || {};
-      event.name = event_name;
-      event.target = target;
-      
+    object.triggerEvent = function (event_name, event) {
+      let target = this
+
+      event = event || {}
+      event.name = event_name
+      event.target = target
+
       if (event_listeners[event_name]) {
-        event_listeners[event_name].forEach(function(callback) {
-          callHandler(callback, event);
-        });
+        event_listeners[event_name].forEach(function (callback) {
+          callHandler(callback, event)
+        })
       }
-      
-      if (event_listeners["*"]) {
-        event_listeners["*"].forEach(function(callback) {
-          callHandler(callback, event);
-        });
+
+      if (event_listeners['*']) {
+        event_listeners['*'].forEach(function (callback) {
+          callHandler(callback, event)
+        })
       }
-    };
-    
+    }
+
     /**
      * @doc function
      * @name BrainBrowser.Event Model:propagateEventTo
@@ -121,31 +121,30 @@ export const events = {
      * target_object.triggerEvent("eventmodelcleanup");
      * ```
      */
-    object.propagateEventTo = function(event_name, other) {
+    object.propagateEventTo = function (event_name, other) {
       if (!isFunction(other.allPropagationTargets)) {
-        throw new Error("Propagation target doesn't seem to have an event model.");
+        throw new Error("Propagation target doesn't seem to have an event model.")
       }
-      
+
       if (object === events || other.allPropagationTargets(event_name).indexOf(object) !== -1) {
-        throw new Error("Propagating event '" + event_name + "' would cause a cycle.");
+        throw new Error("Propagating event '" + event_name + "' would cause a cycle.")
       }
-      
-      propagated_events[event_name] = propagated_events[event_name] || [];
-      
+
+      propagated_events[event_name] = propagated_events[event_name] || []
+
       if (object.directPropagationTargets().indexOf(other) === -1) {
-        other.addEventListener("eventmodelcleanup", function() {
+        other.addEventListener('eventmodelcleanup', function () {
           if (this === other) {
-            object.stopPropagatingTo(other);
+            object.stopPropagatingTo(other)
           }
-        });
+        })
       }
-      
+
       if (propagated_events[event_name].indexOf(other) === -1) {
-        propagated_events[event_name].push(other);
+        propagated_events[event_name].push(other)
       }
-      
-    };
-    
+    }
+
     /**
      * @doc function
      * @name BrainBrowser.Event Model:propagateEventFrom
@@ -171,10 +170,10 @@ export const events = {
      * target_object.triggerEvent("eventmodelcleanup");
      * ```
      */
-    object.propagateEventFrom = function(event_name, other) {
-      other.propagateEventTo(event_name, object);
-    };
-    
+    object.propagateEventFrom = function (event_name, other) {
+      other.propagateEventTo(event_name, object)
+    }
+
     /**
      * @doc function
      * @name BrainBrowser.Event Model:stopPropagatingTo
@@ -187,12 +186,14 @@ export const events = {
      * source_object.stopPropagatingTo(target_object);
      * ```
      */
-    object.stopPropagatingTo = function(other) {
-      Object.keys(propagated_events).forEach(function(event_name) {
-        propagated_events[event_name] = propagated_events[event_name].filter(function(target) { return target !== other; });
-      });
-    };
-    
+    object.stopPropagatingTo = function (other) {
+      Object.keys(propagated_events).forEach(function (event_name) {
+        propagated_events[event_name] = propagated_events[event_name].filter(function (target) {
+          return target !== other
+        })
+      })
+    }
+
     /**
      * @doc function
      * @name BrainBrowser.Event Model:directPropagationTargets
@@ -208,22 +209,22 @@ export const events = {
      * ```
      *
      */
-    object.directPropagationTargets = function(event_name) {
-      let propagation_targets = [];
-      let event_names = event_name === undefined ? Object.keys(propagated_events) : [event_name, "*"];
-      
-      event_names.forEach(function(event_name) {
-        let targets = propagated_events[event_name] || [];
-        targets.forEach(function(other) {
+    object.directPropagationTargets = function (event_name) {
+      let propagation_targets = []
+      let event_names = event_name === undefined ? Object.keys(propagated_events) : [event_name, '*']
+
+      event_names.forEach(function (event_name) {
+        let targets = propagated_events[event_name] || []
+        targets.forEach(function (other) {
           if (propagation_targets.indexOf(other) === -1) {
-            propagation_targets.push(other);
+            propagation_targets.push(other)
           }
-        });
-      });
-      
-      return propagation_targets;
-    };
-    
+        })
+      })
+
+      return propagation_targets
+    }
+
     /**
      * @doc function
      * @name BrainBrowser.Event Model:allPropagationTargets
@@ -240,31 +241,31 @@ export const events = {
      * ```
      *
      */
-    object.allPropagationTargets = function(event_name) {
-      let direct_targets = object.directPropagationTargets(event_name);
-      let propagation_targets = Array.prototype.slice.call(direct_targets);
-      
-      direct_targets.forEach(function(target) {
-        target.allPropagationTargets(event_name).forEach(function(recursive_target) {
-          if (propagation_targets.indexOf(recursive_target) === -1) {
-            propagation_targets.push(recursive_target);
-          }
-        });
-      });
-      
-      return propagation_targets;
-    };
-  }
-};
+    object.allPropagationTargets = function (event_name) {
+      let direct_targets = object.directPropagationTargets(event_name)
+      let propagation_targets = Array.prototype.slice.call(direct_targets)
 
-events.addEventModel(events);
+      direct_targets.forEach(function (target) {
+        target.allPropagationTargets(event_name).forEach(function (recursive_target) {
+          if (propagation_targets.indexOf(recursive_target) === -1) {
+            propagation_targets.push(recursive_target)
+          }
+        })
+      })
+
+      return propagation_targets
+    }
+  },
+}
+
+events.addEventModel(events)
 
 // Call an event handler with protections against exceptions.
 function callHandler(callback, event) {
   try {
-    callback.call(event.target, event);
+    callback.call(event.target, event)
   } catch (exception) {
-    console.error("Error in event handler for: ", event.name);
-    console.error(exception.stack || exception.message || exception);
+    console.error('Error in event handler for: ', event.name)
+    console.error(exception.stack || exception.message || exception)
   }
 }

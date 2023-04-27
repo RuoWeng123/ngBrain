@@ -81,6 +81,7 @@ export class SurfaceBase {
   }
 
   private initAxes = () => {
+    // x: red y: green z: blue
     const axesHelper = new THREE.AxesHelper(200)
     this.scene.add(axesHelper)
   }
