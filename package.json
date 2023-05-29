@@ -2,12 +2,13 @@
   "name": "package.json",
   "version": "0.0.0",
   "scripts": {
-    "dev": "node ./package/socket/socketServer.js & vite",
+    "dev": "npm run startNgBrainServe & vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview --port 4173",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "startNgBrainServe": "node ./package/socket/socketServer.js"
   },
   "dependencies": {
     "@vueuse/core": "^9.13.0",
@@ -37,6 +38,8 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
     "typescript": "~4.7.4",
+    "unplugin-auto-import": "^0.15.3",
+    "unplugin-vue-components": "^0.24.1",
     "vite": "^3.0.9",
     "vue-tsc": "^0.40.7"
   }

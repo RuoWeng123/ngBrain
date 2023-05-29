@@ -1,4 +1,3 @@
-import { events } from 'ngBrain/utils/events'
 
 const createPanel = function (params) {
   const { volume, axis, canvas } = params
@@ -198,7 +197,6 @@ const createPanel = function (params) {
 
       volume.position[panel.slice.width_space.name] = slice_x
       volume.position[panel.slice.height_space.name] = slice_y
-      volume.triggerEvent('position', volume.position)
 
       panel.updated = true
     },
@@ -305,7 +303,6 @@ const createPanel = function (params) {
     panel.default_zoom = volume.getPreferredZoom(panel.canvas.width, panel.canvas.height)
     panel.zoom = panel.default_zoom
   }
-  events.addEventModel(panel)
   return panel
 }
 ///////////////////////

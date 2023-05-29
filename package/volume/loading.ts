@@ -8,7 +8,6 @@ import { createDisplay } from 'ngBrain/volume/lib/display'
 import { createPanel } from 'ngBrain/volume/lib/panel'
 import { createNifiHeader } from 'ngBrain/volume/loader/common/header/createNiftiHeader'
 import { createNiftiVolume } from 'ngBrain/volume/loader/nifti/createNifti1Data'
-import { events } from "../utils/events";
 let default_panel_width = 260
 let default_panel_height = 260
 
@@ -24,7 +23,6 @@ const createVolumeDisplay = (
   viewer: VolumeViewerType
 ) => {
   const display = createDisplay()
-  display.propagateEventTo("*", volume);
   const container = document.createElement('div')
   const { views } = volume_description
   container.classList.add('volume-container')
@@ -188,7 +186,6 @@ const createVolumeDisplay = (
   return display
 }
 const setCommonVolume = async (volume: any, volume_description: VolumeDescriptionType, viewer: VolumeViewerType) => {
-  events.addEventModel(volume)
   // @ts-ignore
   const color_map = await loadDefaultColorMapFromUrl(volume_description.colormap!)
   volume.color_map = color_map
@@ -197,7 +194,6 @@ const setCommonVolume = async (volume: any, volume_description: VolumeDescriptio
   volume.opacity = opacity
   const display = createVolumeDisplay(domElement, volume_description.display_zindex, volume_description, volume, viewer)
   volume.display = display
-  volume.propagateEventTo("*", viewer)
   volume_description.views.forEach((axis) => {
     volume.position[axis] = Math.floor(volume.header[axis].space_length / 2)
   })

@@ -10,6 +10,7 @@ import { ngControl } from '../../package/surface/ngControl'
 import { pialLoadModelData } from '../../package/utils/file'
 import { onMounted, reactive, onBeforeUnmount } from 'vue'
 import { loadModelFromUrl } from 'ngBrain/surface/loading'
+import { drawDot } from "ngBrain/surface/drawGeom";
 
 let surface = reactive({})
 onMounted(async () => {
@@ -33,7 +34,13 @@ onBeforeUnmount(() => {
 })
 
 function handleClick(event) {
-  const res = surface.pick(event.clientX, event.clientY)
+  console.log('event', event)
+  const res = surface.pick(event.offsetX, event.offsetY)
+  drawDot(surface, {
+    position: res.point,
+    color: 0xff0000,
+    size: 5,
+  })
   if (res) {
     console.log('顶角', res.index)
     console.log('坐标', res.point)

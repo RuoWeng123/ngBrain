@@ -1,12 +1,13 @@
 import type { ColorMapType, PanelType, VolumeDescriptionType, VolumeViewerType } from 'ngBrain/volume/types'
 import { loadVolumes } from 'ngBrain/volume/loading'
-import {events} from '../utils/events'
+import { EventEmitter } from 'ngBrain/utils/eventEmitter'
 
 export class VolumeViewer {
   public viewer: VolumeViewerType
   constructor(dom_element: string, options: any) {
     const DomElement = document.getElementById(dom_element)!
     this.viewer = {
+      event: new EventEmitter(),
       header: undefined,
       adjustWindowWidth: false,
       anchor: { x: 0, y: 0 },
@@ -25,7 +26,6 @@ export class VolumeViewer {
       isLinkZoom: options.isLinkZoom,
       synced: false
     }
-    events.addEventModel(this.viewer);
   }
   public setVolumeColorMap = (volId: number, colorMap: ColorMapType) => {
     this.viewer.volumes[volId].color_map = colorMap

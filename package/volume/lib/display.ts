@@ -1,4 +1,3 @@
-import { events } from 'ngBrain/utils/events.js'
 import type { VolumeViewerView } from "ngBrain/volume/types";
 export const createDisplay = function () {
   const display = {
@@ -8,7 +7,6 @@ export const createDisplay = function () {
       zspace: {},
     },
     setPanel: function (axis_name: VolumeViewerView, panel) {
-      panel.propagateEventTo('*', display)
       display.panels[axis_name] = panel
     },
 
@@ -59,6 +57,5 @@ export const createDisplay = function () {
     },
   }
 
-  events.addEventModel(display)
   return display
 }
