@@ -2,6 +2,7 @@ import type { PialModelDataType, ScalpModelDataType, SurfaceOptionsType } from "
 import axios from "axios";
 import { displayModel } from "ngBrain/surface/rendering";
 import { getFile, setFile } from "ngBrain/utils/idbData";
+import { createColorMap } from "ngBrain/utils/colors";
 
 const checkBinary = (options: SurfaceOptionsType) => {
   options.resultType = 'arraybuffer';
@@ -34,7 +35,7 @@ const unrollColors = (colors: number[], num_vertices: number) =>{
   return unrolledColors;
 }
 const loadIndexedModel = (model_data: PialModelDataType | ScalpModelDataType) => {
-  if (model_data.colors.length === 4) {
+  if (model_data.colors.length === 4 && model_data.vertices) {
     const verts = model_data.vertices;
     // @ts-ignore
     model_data.colors = unrollColors(model_data.colors, verts.length / 3);
@@ -68,6 +69,12 @@ const parseModel = (result: any, type: string, options: SurfaceOptionsType, call
     workerInstance.terminate();
   });
 };
+
+const parseIntensityData = (result: string) => {
+  const workerUrl = `../workers/${workerMap.get('text')}`;
+  const workerInstance = new Worker(workerUrl);
+  workerInstance.postMessage({ data: result, options, url: 'http://127.0.0.1:5173/' });
+}
 export const loadModelFromUrl = async (url: string, options: SurfaceOptionsType, callback: any) => {
   const res = await getFile(url);
   if (res) {
@@ -83,7 +90,21 @@ export const loadModelFromUrl = async (url: string, options: SurfaceOptionsType,
 
   const type = options.format || 'mniobj';
   parseModel(result, type, lastOptions, (model_data: PialModelDataType | ScalpModelDataType) => {
-    setFile( url, {data: model_data, filename: 'pial.gii.gz'});
+    // setFile( url, {data: model_data, filename: 'pial.gii.gz'});
     callback(model_data, filename, lastOptions);
   });
 };
+
+
+export const loadColorMapFromUrl = async (url: string, options: SurfaceOptionsType, callback: any) => {
+  const {result, filename, options: lastOptions} = await loadFromURL(url, options);
+  console.log('result', result);
+
+
+  return createColorMap(result)
+};
+
+
+export const loadIntensityDataFromUrl = async (url: string, options: SurfaceOptionsType, callback: any) => {
+  const {result, filename, options: lastOptions} = await loadFromURL(url, options);
+}

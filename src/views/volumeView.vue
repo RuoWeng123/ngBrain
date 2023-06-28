@@ -8,13 +8,13 @@
 <script setup>
 import { onMounted, reactive } from 'vue'
 import { VolumeViewer } from '../../package/volume/viewer'
-import { mghT1Description, scalpMaskDescription } from '../../package/volume/constMap'
+import { mghT1Description } from '../../package/volume/constMap'
 
 let volumeRef = reactive({})
 onMounted(async () => {
   volumeRef = new VolumeViewer('ngVolume', { isLinkZoom: false })
   console.log('volumeRef', volumeRef)
-  let volumeDescriptions = [scalpMaskDescription, mghT1Description]
+  let volumeDescriptions = [mghT1Description]
   await volumeRef.loader(volumeDescriptions)
   volumeRef.setPanelSize(300, 300)
   console.log('this.viewer', volumeRef.viewer)

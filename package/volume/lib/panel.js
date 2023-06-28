@@ -252,19 +252,11 @@ const createPanel = function (params) {
         old_cursor_position.x = cursor.x
         old_cursor_position.y = cursor.y
         panel.updated = true
-        panel.triggerEvent('cursorupdate', {
-          volume: panel.volume,
-          cursor: cursor,
-        })
       }
 
       if (old_zoom_level !== panel.zoom) {
         old_zoom_level = panel.zoom
         panel.updated = true
-        panel.triggerEvent('zoom', {
-          volume: panel.volume,
-          zoom: panel.zoom,
-        })
       }
 
       if (!panel.updated) {
@@ -348,11 +340,22 @@ function drawCursor(panel, color) {
 // Draw the current slice to the canvas.
 function drawSlice(panel) {
   let image = panel.slice_image
-
+  
   if (image) {
     const origin = {
       x: panel.image_center.x - panel.slice_image.width / 2,
       y: panel.image_center.y - panel.slice_image.height / 2,
+    }
+    const borderPoint = (i) =>{
+      return  image.data[i] === 0 && image.data[i+1] === 0 && image.data[i+2] === 0 && image.data[i+3] === 255;
+    }
+    for(let i = 0;  i< image.data.length; i+=4){
+      if(borderPoint(i)){
+        image.data[i] = 20
+        image.data[i+1] = 20
+        image.data[i+2] = 38
+        image.data[i+3] = 255
+      }
     }
     panel.context.putImageData(image, origin.x, origin.y)
   }

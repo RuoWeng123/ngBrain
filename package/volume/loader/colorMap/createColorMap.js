@@ -317,6 +317,7 @@ export const createdColorMap = function (data, options) {
     for (i = 0; i < 256; i++) {
       context.fillStyle =
         'rgb(' + Math.floor(colors[i * 4]) + ', ' + Math.floor(colors[i * 4 + 1]) + ', ' + Math.floor(colors[i * 4 + 2]) + ')'
+      
       context.fillRect(i, 0, 1, color_height)
     }
 

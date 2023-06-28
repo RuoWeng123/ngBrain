@@ -68,6 +68,7 @@ export const getColorsByPatchIds = (colormap: string, patchIds?: number[], isVol
 };
 export const loadVolumeColorMapFromString = (viewer: any, volId: number, colormapData: string, spectrumRange?: any) => {
   const colormap = createdColorMap(colormapData, { scale: 255 });
+  console.log('colorMap', colormap);
   viewer.setVolumeColorMap(volId, colormap);
   if (spectrumRange) {
     viewer.volumes[volId].intensity_min = - spectrumRange.max_value;
@@ -78,6 +79,7 @@ const loadVolumeColorMapFromUrl = async(viewer: VolumeViewerType , volId: number
   const response = await axios.get(colormapUrl);
   const resactionGap = 96;
   let colormap = response.data;
+  console.log('colormap_1', colormap);
   if (isFreeSurfer) {
     colormap = formatFreeSurferColorMap(colormap);
   }

@@ -84,6 +84,7 @@ export const mghT1Description = {
   hideBorder: true,
   hideCursor: false,
   id: 1,
+  backgroundColor:'#141426',
 }
 
 export const scalpMaskDescription = {

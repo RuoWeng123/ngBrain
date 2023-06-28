@@ -45,6 +45,19 @@ const parcUrl = "originalData/parc_aparc.txt.gz";
 
 const volumeT1Url = 'originalData/T1.mgz';
 const scalpMaskUrl = 'originalData/scalp_mask.nii.gz';
+
+const asegColorUrl = "originalData/surfAnatAparcAsegLH.txt";
+const apracAsegModelData = {
+  url: 'originalData/parc_atlas_values.txt.gz',
+  options:{
+    filename: 'parc_atlas_values.txt.gz',
+    format: 'text',
+    result_type: 'arraybuffer',
+    model_name: 'pial_gii',
+    content_type: 'text',
+    name:'lhrh_anat_parc_aparc.txt.gz'
+  }
+};
 export {
   pialUrl,
   pialLoadModelData,
@@ -53,4 +66,6 @@ export {
   parcUrl,
   volumeT1Url,
   scalpMaskUrl,
+  asegColorUrl,
+  apracAsegModelData,
 }

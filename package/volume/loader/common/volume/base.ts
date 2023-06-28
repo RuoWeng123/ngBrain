@@ -145,6 +145,7 @@ export const createBaseVolume = function (header: headerType, native_data: any) 
         )
       )
 
+
       if (image_creation_context) {
         image_creation_context.clearRect(0, 0, image_creation_canvas.width, image_creation_canvas.height)
         image_creation_canvas.width = 0
