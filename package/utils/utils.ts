@@ -1,4 +1,6 @@
 // @ts-ignore
+import type { CoordinateType } from "ngBrain/utils/types";
+import * as THREE from "three";
 const getScrollParent = (element: HTMLElement | null) => {
   if (!element) return document.body
   if (element.scrollHeight > element.clientHeight) {
@@ -127,4 +129,15 @@ const checkCancel = (options: any) => {
   return cancelled
 }
 
-export { getScrollParent, getOffset, captureMouse, isFunction, checkCancel }
+const reverseByVertexCoordsToPoint = (surface: any, coord: CoordinateType) => {
+  const { x, y, z } = coord;
+  const { viewer, camera } = surface;
+  let p = new THREE.Vector3(x, y, z);
+  p = p.applyMatrix4(viewer.model.matrixWorld);
+  const vector = p.project(camera);
+  const canvasX = (vector.x + 1) / 2 * viewer.dom_element.offsetWidth;
+  const canvaxY = -(vector.y - 1) / 2 * viewer.dom_element.offsetHeight;
+  return { x: canvasX, y: canvaxY };
+};
+
+export { getScrollParent, getOffset, captureMouse, isFunction, checkCancel, reverseByVertexCoordsToPoint }

@@ -29,6 +29,7 @@ import { loadModelFromUrl } from 'ngBrain/surface/loading'
 import { drawDot, getDotArr, removeAllDot } from 'ngBrain/surface/drawGeom'
 import { colorToHex } from 'ngBrain/utils/colors'
 import { initBat } from "ngBrain/bat/loadBat";
+import { reverseByVertexCoordsToPoint } from "ngBrain/utils/utils";
 
 let surface = reactive({})
 let singleDot = ref('single')
@@ -80,6 +81,8 @@ function handleClick(event) {
     console.log('顶角', res.index)
     console.log('坐标', res.point)
   }
+  let temp = reverseByVertexCoordsToPoint(surface, res.point);
+  console.log('二维平面坐标', temp);
 }
 
 async function handleViewerOverlay(val) {
