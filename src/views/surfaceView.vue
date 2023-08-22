@@ -11,21 +11,30 @@
       <div class="control-item">
         <el-checkbox v-model="showOverlay" @change="handleViewerOverlay">显示蒙层</el-checkbox>
       </div>
+      <div class="control-item">
+        <el-checkbox v-model="showBrain" @change="handleShowBrain">显示大脑</el-checkbox>
+      </div>
+      <div class="control-item">
+        <el-checkbox v-model="showIndicator" @change="handleIndicator">显示指示器</el-checkbox>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ngControl } from '../../package/surface/ngControl'
-import { apracAsegModelData, asegColorUrl, pialLoadModelData } from "../../package/utils/file";
+import { pialLoadModelData } from '../../package/utils/file'
 import { onMounted, reactive, onBeforeUnmount, ref } from 'vue'
-import { loadColorMapFromUrl, loadModelFromUrl } from "ngBrain/surface/loading";
+import { loadModelFromUrl } from 'ngBrain/surface/loading'
 import { drawDot, getDotArr, removeAllDot } from 'ngBrain/surface/drawGeom'
-import { colorToHex, updateViewerColorMap } from "ngBrain/utils/colors";
+import { colorToHex } from 'ngBrain/utils/colors'
+import { initBat } from "ngBrain/bat/loadBat";
 
 let surface = reactive({})
 let singleDot = ref('single')
 let showOverlay = ref(false)
+let showBrain = ref(true)
+let showIndicator = ref(false)
 onMounted(async () => {
   surface = new ngControl('ngSurface')
   surface.init()
@@ -40,6 +49,9 @@ onMounted(async () => {
     if (pialLoadModelData.options.isDebug) {
       surface.debugMaterialGui(pialLoadModelData.options.material.name)
     }
+    console.log('surface', surface)
+    initBat(surface)
+    surface.render()
   }, 1000)
 })
 onBeforeUnmount(() => {
@@ -47,8 +59,10 @@ onBeforeUnmount(() => {
 })
 
 function handleClick(event) {
-  console.log('event', event)
+  // console.log('event', event)
+  if(!surface.viewer.model.getObjectByName('pial_gii_1')) return
   const res = surface.pick(event.offsetX, event.offsetY)
+  if (!res || !res.hasOwnProperty('point')) return
 
   if (singleDot.value === 'single') {
     removeAllDot(surface)
@@ -68,17 +82,37 @@ function handleClick(event) {
   }
 }
 
-function handleViewerOverlay(val) {
-  console.log(val);
-  if(val){
-    const {result, filename, options: lastOptions} = await loadFromURL(apracAsegModelData.url, apracAsegModelData.options);
-    loadModelFromUrl(apracAsegModelData.url, apracAsegModelData.options, async (model_data, filename, options) => {
-      console.log('model_data', model_data);
-      // surface.renderModelData(model_data, filename, options)
-      let colors = await loadColorMapFromUrl(asegColorUrl)
-      updateViewerColorMap(surface, colors)
-    })
+async function handleViewerOverlay(val) {
+  console.log(val)
+}
+
+async function handleShowBrain(val) {
+  showBrain.value = val
+  if (val) {
+    if (surface.viewer.model.getObjectByName('pial_gii_1')) {
+      return
+    }
+    let brain = surface.viewer.model_data.get('pial_gii_1')
+    surface.viewer.model.add(brain)
+  } else {
+    if (!surface.viewer.model.getObjectByName('pial_gii_1')) {
+      return
+    }
+    let brain = surface.viewer.model_data.get('pial_gii_1')
+    surface.viewer.model.remove(brain)
   }
+  surface.render()
+}
+
+function handleIndicator(val) {
+  if(val){
+    surface.viewer.model.getObjectByName('batAngle').visible = true
+    surface.viewer.model.getObjectByName('batTranslation').visible = true
+  }else{
+    surface.viewer.model.getObjectByName('batAngle').visible = false
+    surface.viewer.model.getObjectByName('batTranslation').visible = false
+  }
+  surface.render()
 }
 </script>
 
@@ -96,7 +130,8 @@ function handleViewerOverlay(val) {
     width: 260px;
     height: 100%;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
+    padding-top: 32px;
   }
 }
 </style>

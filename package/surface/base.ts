@@ -6,7 +6,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { displayModel } from './rendering'
 import type { CoordinateType, SurfaceOptionsType, PialModelDataType, ScalpModelDataType } from 'ngBrain/utils/types'
-export const default_camera_distance = 500
+export const default_camera_distance = 600
 let current_frame: any // 用户动画渲染时，记录当前帧
 let last_frame: any // 用户动画渲染时，记录上一帧
 let old_zoom_level = 1
@@ -24,13 +24,21 @@ export class SurfaceBase {
     this.model_data_store = new Map()
     this.viewer = {
       dom_element: this.domElement,
+      model: new THREE.Object3D(),
       model_data: {
         add: (name: string, data: any) => {
+          console.log('name', name);
           this.model_data_store.set(name, data)
+          this.viewer.model.add(data)
           data.intensity_data = []
         },
         get: (name: string) => {
           return this.model_data_store.get(name)
+        },
+        remove: (name: string) => {
+          const obj = this.model_data_store.get(name)
+          this.viewer.model.remove(obj)
+          this.model_data_store.delete(name)
         },
         getDefaultIntensityData: (name: string) => {
           if (name) {
@@ -53,6 +61,7 @@ export class SurfaceBase {
         },
         clear: () => {
           this.model_data_store?.clear()
+          this.scene.clear()
         },
         forEach: (callback: Function) => {
           for (const item in this.model_data_store) {
@@ -96,6 +105,7 @@ export class SurfaceBase {
   public initScene = () => {
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color(0x151426)
+    this.scene.add(this.viewer.model)
   }
 
   public initCamera = (centroid?: CoordinateType) => {
@@ -113,7 +123,6 @@ export class SurfaceBase {
     // x 红， y 绿色  z 蓝色
     this.light = new THREE.PointLight(0xf5f6f5, 0.7, 0)
     this.light.position.set(-default_camera_distance, 0, 0)
-    this.light.lookAt(0, 0, 0)
     this.scene.add(this.light)
 
     const light1 = new THREE.PointLight(0xf5f6f5, 0.7, 0)
@@ -148,7 +157,7 @@ export class SurfaceBase {
     const { shapes, model_data: modelData } = displayModel(model_data, options.filename, options)
     this.viewer.model_data.add(options.model_name, modelData)
     for (const shape of shapes) {
-      this.scene.add(shape)
+      this.viewer.model_data.add(shape.name, shape);
     }
     this.renderFrame()
   }
