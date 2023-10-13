@@ -30,6 +30,8 @@ export class ngControl extends SurfaceBase {
     })
 
     this.ambientLight()
+
+    this.debugMaterialGui('scalp_mask')
   }
 
   public ambientLight = () => {

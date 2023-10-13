@@ -4,9 +4,10 @@ import { getFile } from '../utils/idbData'
 import * as THREE from 'three'
 // @ts-ignore
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js'
 import { displayModel } from './rendering'
 import type { CoordinateType, SurfaceOptionsType, PialModelDataType, ScalpModelDataType } from 'ngBrain/utils/types'
-export const default_camera_distance = 600
+export const default_camera_distance = 500
 let current_frame: any // 用户动画渲染时，记录当前帧
 let last_frame: any // 用户动画渲染时，记录上一帧
 let old_zoom_level = 1
@@ -25,9 +26,9 @@ export class SurfaceBase {
     this.viewer = {
       dom_element: this.domElement,
       model: new THREE.Object3D(),
+      control: null,
       model_data: {
         add: (name: string, data: any) => {
-          console.log('name', name);
           this.model_data_store.set(name, data)
           this.viewer.model.add(data)
           data.intensity_data = []
@@ -117,21 +118,39 @@ export class SurfaceBase {
   }
 
   public initLight = () => {
-    const ambientLight = new THREE.AmbientLight(0x000000)
+    const ambientLight = new THREE.AmbientLight(0x404040)
     ambientLight.name = 'ambientLight'
     this.scene.add(ambientLight)
     // x 红， y 绿色  z 蓝色
-    this.light = new THREE.PointLight(0xf5f6f5, 0.7, 0)
-    this.light.position.set(-default_camera_distance, 0, 0)
-    this.scene.add(this.light)
-
-    const light1 = new THREE.PointLight(0xf5f6f5, 0.7, 0)
-    light1.position.set(default_camera_distance, 0, 0)
+    const light1 = new THREE.DirectionalLight(0x404040, 0.6)
+    light1.position.set(1, 0, 0)
     this.scene.add(light1)
-
-    const light2 = new THREE.PointLight(0xf5f6f5, 0.7, 0)
-    light2.position.set(0, 0, -default_camera_distance)
+    const light2 = new THREE.DirectionalLight(0x404040, 0.6)
+    light2.position.set(-1, 0, 0)
     this.scene.add(light2)
+    const light3 = new THREE.DirectionalLight(0x404040, 0.6)
+    light3.position.set(0, 1, 0)
+    this.scene.add(light3)
+    const light4 = new THREE.DirectionalLight(0x404040, 0.6)
+    light4.position.set(0, -1, 0)
+    this.scene.add(light4)
+    const light5 = new THREE.DirectionalLight(0x404040, 0.6)
+    light5.position.set(0, 0, 1)
+    this.scene.add(light5)
+    const light6 = new THREE.DirectionalLight(0x404040, 0.6)
+    light6.position.set(0, 0, -1)
+    this.scene.add(light6)
+    // this.light = new THREE.PointLight(0x8c8c8c, 1, 0);
+    // this.light.position.set(-default_camera_distance*2, 0, 0);
+    // this.scene.add(this.light);
+    //
+    // const light1 = new THREE.PointLight(0x8c8c8c, 1, 0);
+    // light1.position.set(default_camera_distance*2, 0, 0);
+    // this.scene.add(light1);
+    //
+    // const light2 = new THREE.PointLight(0x8c8c8c, 1, 0);
+    // light2.position.set(0, 0, -default_camera_distance*2);
+    // this.scene.add(light2);
   }
 
   private initControl = () => {
@@ -147,17 +166,23 @@ export class SurfaceBase {
     controls.addEventListener('change', (e: any) => {
       this.render()
     })
+    const control = new TransformControls(this.camera, this.renderer.domElement)
+    control.addEventListener('change', (e: any) => {
+      this.render()
+    })
+    this.viewer.control = control
+    this.scene.add(control)
   }
 
   public render = () => {
     this.renderer.render(this.scene, this.camera)
     this.viewer.updated = false
   }
-  public renderModelData = (model_data: PialModelDataType | ScalpModelDataType, filename: string, options: SurfaceOptionsType) => {
-    const { shapes, model_data: modelData } = displayModel(model_data, options.filename, options)
+  public renderModelData = (model_data_p: PialModelDataType | ScalpModelDataType, filename: string, options: SurfaceOptionsType) => {
+    const { shapes, model_data: modelData } = displayModel(model_data_p, options.filename, options)
     this.viewer.model_data.add(options.model_name, modelData)
     for (const shape of shapes) {
-      this.viewer.model_data.add(shape.name, shape);
+      this.viewer.model_data.add(shape.name, shape)
     }
     this.renderFrame()
   }
@@ -181,14 +206,15 @@ export class SurfaceBase {
       const delta = current_frame - last_frame
       const rotation = delta * 0.00015 * this.viewer.rotate_speed
       if (this.viewer.autoRotate.x) {
-        this.scene.children.find((item: any) => item.name === 'cube').rotation.x += rotation
+        this.scene.children.find((item: any) => item.name === 'scalp_mask_1').rotation.x += rotation
+        this.viewer.updated = true
       }
       if (this.viewer.autoRotate.y) {
-        this.scene.children.find((item: any) => item.name === 'cube').rotation.y += rotation
+        this.scene.children.find((item: any) => item.name === 'scalp_mask_1').rotation.y += rotation
         this.viewer.updated = true
       }
       if (this.viewer.autoRotate.z) {
-        this.scene.children.find((item: any) => item.name === 'cube').rotation._z += rotation
+        this.scene.children.find((item: any) => item.name === 'scalp_mask_1').rotation.z += rotation
         this.viewer.updated = true
       }
       if (old_zoom_level !== this.viewer.zoom) {

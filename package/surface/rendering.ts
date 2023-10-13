@@ -1,6 +1,7 @@
 import type { PialModelDataType, ScalpModelDataType, SurfaceOptionsType } from '../utils/types';
 // @ts-ignore
 import * as THREE from 'three';
+import lodash from "lodash";
 
 export const displayModel = (model_data: PialModelDataType | ScalpModelDataType, filename: string, options: SurfaceOptionsType) => {
   const { shapes, model_data: new_model_data } = createModel(model_data, filename, options);
@@ -84,6 +85,7 @@ const createShape = (object_description: any, options: SurfaceOptionsType) => {
     geometry.setIndex(index);
   }
   geometry.setAttribute("position", position);
+
   if (normal) {
     geometry.setAttribute("normal", object_description.normal);
   } else {

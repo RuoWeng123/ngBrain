@@ -82,8 +82,9 @@ const setBatCenterLine = (batObj: any) => {
 export const initBat = (surface: any) => {
   const loader = new AMFLoader()
   loader.load('originalData/ngBat1.amf', (object: any) => {
-    object.position.set(0, 0, 0)
+    object.position.set(30, 30, 30)
     object.name = 'ngBat'
+    object.visible = false;
     object = setOpacity(object)
     object = setBatCenterPoint(object)
     object = setBatCircle(object)

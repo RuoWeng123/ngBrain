@@ -1,6 +1,5 @@
 <template>
   <div class="surface_container">
-    <div id="ngSurface" @mouseup="handleSurfaceClick" @click="handleClick"></div>
     <div class="control">
       <div class="control-item">
         <el-radio-group v-model="singleDot">
@@ -13,19 +12,24 @@
       </div>
       <div class="control-item">
         <el-checkbox v-model="showBrain" @change="handleShowBrain">显示大脑</el-checkbox>
+        <el-checkbox v-model="showScalp" @change="handleShowScalp">显示头皮</el-checkbox>
       </div>
       <div class="control-item">
-        <el-checkbox v-model="showIndicator" @change="handleIndicator">显示指示器</el-checkbox>
+        <el-checkbox v-model="showIndicator" @change="handleIndicator">显示拍子</el-checkbox>
+      </div>
+      <div class="control-item">
+        <el-checkbox v-model="showTransform" @change="handleTransform">调整角度</el-checkbox>
       </div>
     </div>
+    <div id="ngSurface" @click="handleClick"></div>
   </div>
 </template>
 
 <script setup>
 import { ngControl } from '../../package/surface/ngControl'
-import { pialLoadModelData } from '../../package/utils/file'
+import { parcColorMapUrl, pialLoadModelData, scalpLoadModelData } from "../../package/utils/file";
 import { onMounted, reactive, onBeforeUnmount, ref } from 'vue'
-import { loadModelFromUrl } from 'ngBrain/surface/loading'
+import { loadColorMapFromUrl, loadModelFromUrl } from "ngBrain/surface/loading";
 import { drawDot, getDotArr, removeAllDot } from 'ngBrain/surface/drawGeom'
 import { colorToHex } from 'ngBrain/utils/colors'
 import { initBat } from "ngBrain/bat/loadBat";
@@ -35,23 +39,26 @@ let surface = reactive({})
 let singleDot = ref('single')
 let showOverlay = ref(false)
 let showBrain = ref(true)
+let showScalp = ref(true)
 let showIndicator = ref(false)
+let showTransform = ref(false)
 onMounted(async () => {
   surface = new ngControl('ngSurface')
   surface.init()
   loadModelFromUrl(pialLoadModelData.url, pialLoadModelData.options, (model_data, filename, options) => {
     surface.renderModelData(model_data, filename, options)
   })
-  // loadModelFromUrl(scalpLoadModelData.url, scalpLoadModelData.options, (model_data, filename, options) =>{
-  //   surface.renderModelData(model_data, filename, options);
-  // });
+  loadModelFromUrl(scalpLoadModelData.url, scalpLoadModelData.options, (model_data, filename, options) =>{
+    surface.renderModelData(model_data, filename, options);
+  });
   setTimeout(() => {
     surface.initGui()
-    if (pialLoadModelData.options.isDebug) {
-      surface.debugMaterialGui(pialLoadModelData.options.material.name)
+    if (scalpLoadModelData.options.isDebug) {
+      surface.debugMaterialGui(scalpLoadModelData.options.material.name)
     }
     console.log('surface', surface)
     initBat(surface)
+
     surface.render()
   }, 1000)
 })
@@ -63,7 +70,7 @@ function handleClick(event) {
   // console.log('event', event)
   if(!surface.viewer.model.getObjectByName('pial_gii_1')) return
   const res = surface.pick(event.offsetX, event.offsetY)
-  if (!res || !res.hasOwnProperty('point')) return
+  if (!res || !res.point) return
 
   if (singleDot.value === 'single') {
     removeAllDot(surface)
@@ -87,6 +94,9 @@ function handleClick(event) {
 
 async function handleViewerOverlay(val) {
   console.log(val)
+  // 加载colorMap
+  const color = await loadColorMapFromUrl(parcColorMapUrl)
+  console.log('color', color);
 }
 
 async function handleShowBrain(val) {
@@ -106,14 +116,45 @@ async function handleShowBrain(val) {
   }
   surface.render()
 }
+async function handleShowScalp(val) {
+  showScalp.value = val
+  if (val) {
+    if (surface.viewer.model.getObjectByName('scalp_mask_1')) {
+      return
+    }
+    let scalp = surface.viewer.model_data.get('scalp_mask_1')
+    surface.viewer.model.add(scalp)
+  } else {
+    if (!surface.viewer.model.getObjectByName('scalp_mask_1')) {
+      return
+    }
+    let scalp = surface.viewer.model_data.get('scalp_mask_1')
+    surface.viewer.model.remove(scalp)
+  }
+  surface.render()
+}
 
 function handleIndicator(val) {
   if(val){
+    surface.viewer.model.getObjectByName('ngBat').visible = true
     surface.viewer.model.getObjectByName('batAngle').visible = true
     surface.viewer.model.getObjectByName('batTranslation').visible = true
   }else{
+    surface.viewer.model.getObjectByName('ngBat').visible = false
     surface.viewer.model.getObjectByName('batAngle').visible = false
     surface.viewer.model.getObjectByName('batTranslation').visible = false
+  }
+  surface.render()
+}
+
+function handleTransform(val) {
+  if(val){
+    showTransform.value = true
+    surface.viewer.control.attach(surface.viewer.model)
+    surface.viewer.control.setMode('rotate')
+  }else{
+    showTransform.value = false
+    surface.viewer.control.detach()
   }
   surface.render()
 }
@@ -125,6 +166,7 @@ function handleIndicator(val) {
   flex: 1;
   justify-content: space-between;
   flex-direction: row;
+  border-left: 1px solid #ccc;
 
   #ngSurface {
     flex: 1;
@@ -132,9 +174,8 @@ function handleIndicator(val) {
   .control {
     width: 260px;
     height: 100%;
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
-    padding-top: 32px;
   }
 }
 </style>
