@@ -81,18 +81,14 @@ const setBatCenterLine = (batObj: any) => {
 }
 export const initBat = (surface: any) => {
   const loader = new AMFLoader()
-  loader.load('originalData/ngBat1.amf', (object: any) => {
-    object.position.set(30, 30, 30)
+  loader.load('originalData/ngBat5.amf', (object: any) => {
+    object.position.set(0,0,99);
+
     object.name = 'ngBat'
-    object.visible = false;
-    object = setOpacity(object)
-    object = setBatCenterPoint(object)
-    object = setBatCircle(object)
-    object = setBatCenterLine(object)
-
-    object = setAngle(object, { angle: 30, horizontalAngle: 90 })
+    object = setAngle(object, { angle: 20, horizontalAngle: 90 })
     object = setTranslation(object, {angle: 30, distance: 30, x: 0, y: 0})
-
+    object.scale.set(0.7, 0.7, 0.7)
+    object.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI);
     surface.viewer.model_data.add('ngBat', object)
   })
 }
@@ -122,7 +118,7 @@ export const setAngle = (batObj: any, angleParams:angleType) => {
 
     const batAngleObj = arrowGroup(angle, horizontalAngle, 10);
     batAngleObj.name = batAngleName;
-    batAngleObj.position.set(0, 0,-12);
+    batAngleObj.position.set(0, 0, -8.2);
     batAngleObj.parent = batObj;
     batObj.children.push(batAngleObj);
   }
@@ -151,7 +147,7 @@ export const setTranslation = (batObj: any, translation: translationType) => {
       // const flashOpacity = this.countFlashOpacity(distance < 5);
       const batTranslationObj = arrowGroup(0, angle, distance);
       batTranslationObj.name = batTranslationName;
-      batTranslationObj.position.set(0, 0, 10);
+      batTranslationObj.position.set(0, 0, 5);
       batTranslationObj.parent = batObj;
       batObj.children.push(batTranslationObj);
     }
@@ -164,13 +160,13 @@ export const setTranslation = (batObj: any, translation: translationType) => {
   if (distance <= safeDistance && !flashVisible) return batObj;
 
   const color = distance > safeDistance ? 0xD36F66 : 0x8CAB39;
-  const geometry = new THREE.SphereGeometry(4, 32, 32);
+  const geometry = new THREE.SphereGeometry(4, 24, 24);
   const material = new THREE.MeshBasicMaterial({
     color,
   });
 
   const sphere = new THREE.Mesh(geometry, material);
-  sphere.position.set(x, y , -12);
+  sphere.position.set(x, y , -7.2);
   sphere.name = batTranslationName;
 
   sphere.parent = batObj;

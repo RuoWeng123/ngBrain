@@ -29,7 +29,7 @@ const scalpLoadModelData = {
     format: 'mniobj',
     model_name: 'scalp_mask',
     content_type: 'text',
-    opacity: 80,
+    opacity: 50,
     isDebug: true,
     material: {
       name: 'scalp_mask',
@@ -38,7 +38,7 @@ const scalpLoadModelData = {
       emissiveIntensity: 0.27,
       roughness: 1,
       transparent: true,
-      opacity: 1,
+      opacity: 0.6,
     },
   },
 }

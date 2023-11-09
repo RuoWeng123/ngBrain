@@ -32,6 +32,8 @@ const arrowGroup = (angle: number, horizontalAngle: number, distance: number = 0
     group.add(splineDashPath)
   }
 
+  group.scale.set(0.6,0.6,0.6)
+
   return group
 }
 

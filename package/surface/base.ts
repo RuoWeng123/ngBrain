@@ -1,13 +1,12 @@
 // @ts-ignore
-import { getFile } from '../utils/idbData'
-// @ts-ignore
 import * as THREE from 'three'
 // @ts-ignore
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+// @ts-ignore
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js'
 import { displayModel } from './rendering'
 import type { CoordinateType, SurfaceOptionsType, PialModelDataType, ScalpModelDataType } from 'ngBrain/utils/types'
-export const default_camera_distance = 500
+export const default_camera_distance = 300
 let current_frame: any // 用户动画渲染时，记录当前帧
 let last_frame: any // 用户动画渲染时，记录上一帧
 let old_zoom_level = 1
@@ -84,7 +83,7 @@ export class SurfaceBase {
   public init = () => {
     this.initRenderer()
     this.initScene()
-    this.initAxes()
+    // this.initAxes()
     this.initCamera()
     this.initLight()
     this.initControl()
@@ -110,7 +109,7 @@ export class SurfaceBase {
   }
 
   public initCamera = (centroid?: CoordinateType) => {
-    this.camera = new THREE.PerspectiveCamera(30, this.domElement.offsetWidth / this.domElement.offsetHeight, 1, 1000)
+    this.camera = new THREE.PerspectiveCamera(100, this.domElement.offsetWidth / this.domElement.offsetHeight, 1, 1200)
     this.camera.position.set(0, 0, default_camera_distance)
     if (centroid) {
       this.camera.lookAt(centroid.x, centroid.y, default_camera_distance)

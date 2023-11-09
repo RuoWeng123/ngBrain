@@ -53,9 +53,9 @@ onMounted(async () => {
   });
   setTimeout(() => {
     surface.initGui()
-    if (scalpLoadModelData.options.isDebug) {
-      surface.debugMaterialGui(scalpLoadModelData.options.material.name)
-    }
+    // if (scalpLoadModelData.options.isDebug) {
+    //   surface.debugMaterialGui(scalpLoadModelData.options.material.name)
+    // }
     console.log('surface', surface)
     initBat(surface)
 
